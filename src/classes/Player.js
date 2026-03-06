@@ -9,6 +9,10 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.setGravityY(800); // Higher gravity for snappier jumps
         this.setDragX(1000); // Friction when not pressing keys
 
+        // Because the sprites are illustrations roughly 36x64, let's keep the physics body slightly smaller
+        this.body.setSize(20, 60);
+        this.body.setOffset(8, 4);
+
         // Weapon System
         this.weapons = {
             PISTOL: { type: 'pistol', damage: 1, fireRate: 400, ammo: -1 }, // -1 means infinite
@@ -92,8 +96,16 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         if (weapon.ammo > 0) {
             weapon.ammo--;
             // UI text update happens in GameScene
+            // Update UI
             this.scene.events.emit('ammoChanged', weapon.ammo, weapon.type);
         }
+
+        // Change animation texture to shooting stance
+        this.setTexture('player_shoot');
+        // Revert to idle after the fire rate delay is over 
+        this.scene.time.delayedCall(150, () => {
+            if (!this.isDead) this.setTexture('player_idle');
+        });
     }
 
     fireBullet(weapon, angleOffset = 0) {
@@ -146,9 +158,10 @@ class Player extends Phaser.Physics.Arcade.Sprite {
 
     die() {
         this.isDead = true;
-        this.setTint(0x555555);
-        this.setVelocity(0, 0);
-        this.setRotation(Math.PI / 2); // Rotate 90 degrees to "fall"
+        this.setTexture('player_dead');
+        // Stop any horizontal drift and reset rotation just in case
+        this.setVelocityX(0);
+        this.setRotation(0);
         this.scene.events.emit('playerDied');
     }
 
