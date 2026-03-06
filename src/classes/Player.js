@@ -10,8 +10,13 @@ class Player extends Phaser.Physics.Arcade.Sprite {
         this.setDragX(1000); // Friction when not pressing keys
 
         // Because the sprites are illustrations roughly 36x64, let's keep the physics body slightly smaller
+        // We MUST prevent the physics engine from auto-resizing the hitbox when textures change
         this.body.setSize(20, 60);
         this.body.setOffset(8, 4);
+
+        // Disable body synchronization with texture frame size changes
+        // This is crucial to prevent getting stuck in the floor when shooting
+        this.body.syncBounds = false;
 
         // Weapon System
         this.weapons = {

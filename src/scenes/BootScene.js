@@ -4,9 +4,10 @@ class BootScene extends Phaser.Scene {
     }
 
     preload() {
-        // Here we will generate graphics on the fly so we don't need real images immediately.
-        // But for when you have real assets, they would be loaded here:
-        // this.load.image('bgm_maid_cafe', 'assets/audio/bgm_maid_cafe.mp3');
+        // Load custom player sprites
+        this.load.image('player_idle', 'assets/sprites/player_idle.png');
+        this.load.image('player_shoot', 'assets/sprites/player_shoot.png');
+        this.load.image('player_dead', 'assets/sprites/player_dead.png');
 
         let loadingText = this.add.text(400, 300, 'Loading...', { font: '20px Courier', fill: '#ffffff' });
         loadingText.setOrigin(0.5, 0.5);
@@ -14,13 +15,6 @@ class BootScene extends Phaser.Scene {
 
     create() {
         // Create generated textures for placeholders
-
-        // 1. Player Graphics
-        let gPlayer = this.make.graphics();
-        gPlayer.fillStyle(0x00f3ff, 1); // Neon blue
-        gPlayer.fillRect(0, 0, 32, 48); // Body
-        gPlayer.generateTexture('player_idle', 32, 48);
-        gPlayer.clear();
 
         // 2. Enemy (Maid) Graphics
         let gEnemy = this.make.graphics();
